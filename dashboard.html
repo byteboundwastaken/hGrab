@@ -1,0 +1,84 @@
+<html>
+  <head>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+          const firebaseConfig = {
+    apiKey: "AIzaSyB_9QRMSPkJJkDntzSG3RF0aoPeAGnfUoY",
+    authDomain: "hgrab-1d498.firebaseapp.com",
+    projectId: "hgrab-1d498",
+    storageBucket: "hgrab-1d498.firebasestorage.app",
+    messagingSenderId: "295813545339",
+    appId: "1:295813545339:web:803d209f2daee57273d1de",
+    measurementId: "G-NBBMD6M21C"
+  };
+
+  firebase.initializeApp(firebaseConfig)
+        const db = firebase.firestore();
+        async function checkKey() {
+            const userkey = prompt('enter key')
+            if (!userkey) {
+                alert('enter a key dumbass')
+            }
+            const doc = await db.collection('config').doc('secret').get();
+            const secretKey = doc.data().key;
+
+            if (userkey === secretKey) {
+                document.getElementById('dashboard').style.display = 'block';
+            }
+        }
+        checkKey()
+let ips =[]
+  async function getData() {
+    
+    const db = firebase.firestore();
+    db.collection('ips').get().then(snapshot => {
+ 
+  snapshot.forEach(doc => {
+   const data = doc.data();
+   
+   const row  = document.createElement('tr')
+   row.innerHTML =`
+      <td>${data.ip || ''}</td>
+      <td>${data.region || ''}</td>
+      <td>${data.country || ''}</td>
+      <td>${data.zip_code || ''}</td>
+      <td>${data.time_zone || ''}</td>
+      <td>${doc.id}</td>
+    `;
+    ipTable.appendChild(row);
+    ips.push(data.ip);
+    console.log(ips[2])
+  });
+
+});
+
+  }
+
+  getData()
+    </script>
+
+</head> 
+<body>
+    <div id="dashboard" style="display:none">
+        <table border="1">
+            <thead>
+              <tr>
+                <th>IP</th>
+                <th>Region</th>
+                <th>Country</th>
+                <th>Zip</th>
+                <th>Time Zone</th>
+                <th>Doc ID</th>
+              </tr>
+            </thead>
+            <tbody id="ipTable">
+              
+            </tbody>
+          </table>
+
+    </div>
+</body>
+</html>
+
